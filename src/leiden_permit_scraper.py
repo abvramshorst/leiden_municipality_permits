@@ -8,7 +8,7 @@ def _get_api_url():
     return 'https://vergunningen.leiden.nl/ldn.dll?appname=Ldn&prgname=Ldn&ARGUMENTS=-A03send,-A,-A,-A{},-A,-A'
 
 
-def get_leiden_vergunning_data(url, date):
+def get_leiden_permit_data(url, date):
     page = requests.get(url.format(date))
     soup = BeautifulSoup(page.content, 'html.parser')
     info = soup.find_all('table', class_='opgemaakt')
@@ -18,7 +18,7 @@ def get_leiden_vergunning_data(url, date):
     return pd.DataFrame(data=data, columns=colnames)
 
 
-def get_dates_leiden_vergunningen(url):
+def get_dates_leiden_permits(url):
     date = '11-04-2019'
     page = requests.get(url.format(date))
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -27,7 +27,7 @@ def get_dates_leiden_vergunningen(url):
     return dates
 
 
-def get_postcode(loc_info):
+def get_zip_code(loc_info):
     code = re.search("[0-9][0-9][0-9][0-9][a-zA-Z][a-zA-Z]$", loc_info)
     if code is not None:
         code = loc_info[code.span()[0]:code.span()[1]]
@@ -36,7 +36,7 @@ def get_postcode(loc_info):
         return ''
 
 
-def get_adress(loc_info):
+def get_address(loc_info):
     code = re.search("[0-9][0-9][0-9][0-9][a-zA-Z][a-zA-Z]$", loc_info)
     if code is not None:
         code = loc_info[:code.span()[0]]
@@ -45,10 +45,10 @@ def get_adress(loc_info):
         return loc_info
 
 
-def parse_vergunningen_df(raw_df):
+def parse_permits(raw_df):
     df = raw_df.copy()
-    df['postcode6'] = df.LocatiePostcode.apply(get_postcode)
+    df['postcode6'] = df.LocatiePostcode.apply(get_zip_code)
     df['postcode4'] = df.postcode6.apply(lambda x: x[0:4])
-    df['adres'] = df.LocatiePostcode.apply(get_adress)
+    df['adres'] = df.LocatiePostcode.apply(get_address)
     df = df.drop('LocatiePostcode',axis=1)
     return df
