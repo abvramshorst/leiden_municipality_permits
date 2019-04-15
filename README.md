@@ -1,0 +1,2 @@
+# Leiden Municipality Permit Scraper ![Build Status](https://travis-ci.org/abvramshorst/leiden_municipality_permits.png)
+This repo is an exercise in creating a webscraper with thorough testing, augmented with a CI pipeline
