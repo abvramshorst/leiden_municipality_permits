@@ -1,0 +1,14 @@
+language: python
+python:
+  - '3.6'
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - cd tests/ && pytest . && cd -
+  - coverage erase
+  - coverage run -m pytest && coverage html
+
+after_success:
+  - codecov
